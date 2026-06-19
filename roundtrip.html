@@ -22,6 +22,8 @@
         .input-group { margin-bottom: 15px; position: relative;}
         .input-group label { display: block; font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-bottom: 8px; }
         .input-field { width: 100%; background: var(--bg-light); border: none; padding: 16px; border-radius: 12px; font-size: 0.95rem; font-weight: 500; color: var(--text-dark); outline: none; }
+        .input-row { display: flex; gap: 15px; }
+        .input-row .input-group { flex: 1; }
         .fleet-header { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; margin-top: 25px; margin-bottom: 15px; }
         .fleet-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 25px; }
         .fleet-card { border: 2px solid var(--bg-light); background: #ffffff; border-radius: var(--border-radius-md); padding: 15px 8px; text-align: center; cursor: pointer; transition: all 0.2s ease; }
@@ -50,6 +52,7 @@
         <h1>OUTSTATION <br><span>ROUND TRIP</span></h1>
         <p>Planning a two-way journey? Book a dedicated round-trip outstation taxi from Coimbatore.</p>
     </section>
+
     <section class="booking-widget">
         <h2 class="widget-title">Book Round Trip</h2>
         <div class="input-group">
@@ -60,6 +63,29 @@
             <label>🔺 Destination (And Return)</label>
             <input type="text" id="drop-input" class="input-field" placeholder="Enter Drop City" oninput="resetFareUI()">
         </div>
+
+        <div class="input-row">
+            <div class="input-group">
+                <label>📅 Pickup Date</label>
+                <input type="date" id="date-input" class="input-field" onchange="resetFareUI()">
+            </div>
+            <div class="input-group">
+                <label>🕒 Pickup Time</label>
+                <input type="time" id="time-input" class="input-field" onchange="resetFareUI()">
+            </div>
+        </div>
+
+        <div class="input-row" style="margin-top: 15px;">
+            <div class="input-group">
+                <label style="color: #d4a300;">📅 Return Date</label>
+                <input type="date" id="return-date-input" class="input-field" onchange="resetFareUI()" style="border: 1px solid #f8c966;">
+            </div>
+            <div class="input-group">
+                <label style="color: #d4a300;">🕒 Return Time</label>
+                <input type="time" id="return-time-input" class="input-field" onchange="resetFareUI()" style="border: 1px solid #f8c966;">
+            </div>
+        </div>
+
         <div class="fleet-header">🚐 CHOOSE YOUR CAB</div>
         <div class="fleet-grid">
             <div class="fleet-card selected" onclick="selectFleet(this)" data-car="Prime Sedan" data-rate-round="13">
@@ -73,67 +99,126 @@
                 <div class="fleet-price">₹18/KM</div>
             </div>
         </div>
+
         <div id="fare-result-box" class="fare-result-box">
             <h4>Estimated Round Trip Fare</h4>
             <h2 id="fare-amount">₹0</h2>
             <p id="fare-details">Distance Breakdown</p>
         </div>
+
         <button class="btn-quote btn-calc" id="btn-calculate" onclick="calculateFare()">CALCULATE FARE ></button>
         <button class="btn-quote btn-wa" id="btn-whatsapp" onclick="sendWhatsAppQuote()">BOOK VIA WHATSAPP 💬</button>
     </section>
+
     <div class="fixed-bottom">
         <a href="tel:+919043743777" class="btn-main-call">📞 CALL NOW</a>
         <a href="https://wa.me/919043743777" class="btn-whatsapp">💬</a>
     </div>
 </div>
+
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB7j5s8T369OKe4H69e3jhkGfM2sJhniCo&libraries=places&callback=initMap" async defer></script>
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let today = new Date().toISOString().split('T')[0];
+        document.getElementById("date-input").value = today;
+        document.getElementById("return-date-input").value = today;
+    });
+
     function initMap() {
         const options = { componentRestrictions: { country: "in" } };
         new google.maps.places.Autocomplete(document.getElementById('pickup-input'), options).addListener('place_changed', resetFareUI);
         new google.maps.places.Autocomplete(document.getElementById('drop-input'), options).addListener('place_changed', resetFareUI);
     }
+
     function resetFareUI() {
         document.getElementById('fare-result-box').style.display = 'none';
         document.getElementById('btn-whatsapp').style.display = 'none';
         document.getElementById('btn-calculate').style.display = 'block';
     }
+
     function selectFleet(el) {
         document.querySelectorAll('.fleet-card').forEach(c => c.classList.remove('selected'));
         el.classList.add('selected');
         resetFareUI();
     }
+
     function calculateFare() {
         const origin = document.getElementById('pickup-input').value;
         const destination = document.getElementById('drop-input').value;
         if(!origin || !destination) return alert("Please enter both locations.");
+
+        if(!document.getElementById('time-input').value || !document.getElementById('return-time-input').value) {
+            alert("Please select both your Pickup Time and Return Time to calculate waiting charges.");
+            return;
+        }
+
         document.getElementById('btn-calculate').innerText = "CALCULATING... ⏳";
         new google.maps.DistanceMatrixService().getDistanceMatrix({
             origins: [origin], destinations: [destination], travelMode: 'DRIVING', unitSystem: google.maps.UnitSystem.METRIC
         }, function(response, status) {
             if (status !== 'OK' || response.rows[0].elements[0].status === 'ZERO_RESULTS') return;
+            
             const distance = response.rows[0].elements[0].distance.value / 1000;
+            const durationSec = response.rows[0].elements[0].duration.value;
             const rate = parseFloat(document.querySelector('.fleet-card.selected').getAttribute('data-rate-round'));
             
             let hillCharge = 0;
             if(["ooty", "kodaikanal", "valparai", "munnar", "coonoor", "nilgiris", "yercaud"].some(s => destination.toLowerCase().includes(s))) hillCharge = 400;
 
             const billableKm = Math.max(distance * 2, 250);
-            const totalFare = (billableKm * rate) + 500 + hillCharge;
+            let totalFare = (billableKm * rate) + 500 + hillCharge;
+            let detailsText = `~${(distance*2).toFixed(1)} km total (Billed Min 250km/day) + ₹500 Bata`;
+
+            // Waiting time logic
+            const pDate = document.getElementById('date-input').value;
+            const pTime = document.getElementById('time-input').value;
+            const rDate = document.getElementById('return-date-input').value;
+            const rTime = document.getElementById('return-time-input').value;
             
+            const start = new Date(`${pDate}T${pTime}`);
+            const end = new Date(`${rDate}T${rTime}`);
+            const totalTripHours = (end - start) / (1000 * 60 * 60);
+
+            if (totalTripHours > 0) {
+                const driveHours = (durationSec * 2) / 3600; 
+                const waitingHours = totalTripHours - driveHours;
+                
+                if (waitingHours > 0) {
+                    const billableWaitHours = Math.round(waitingHours);
+                    if (billableWaitHours > 0) {
+                        const waitCharge = billableWaitHours * 100;
+                        totalFare += waitCharge;
+                        detailsText += ` + ₹${waitCharge} Wait Charge (${billableWaitHours} hrs)`;
+                    }
+                }
+            } else if (totalTripHours <= 0) {
+                alert("Return time must be after the pickup time.");
+                resetFareUI();
+                return;
+            }
+
+            if(hillCharge > 0) detailsText += ` + ₹400 Hill Charge`;
+
             document.getElementById('fare-amount').innerText = "₹" + Math.round(totalFare).toLocaleString('en-IN');
-            document.getElementById('fare-details').innerText = `~${(distance*2).toFixed(1)} km total (Billed Min 250km/day) + ₹500 Bata` + (hillCharge ? ` + ₹400 Hill Charge` : ``);
+            document.getElementById('fare-details').innerText = detailsText;
             document.getElementById('fare-result-box').style.display = 'block';
             document.getElementById('btn-calculate').style.display = 'none';
             document.getElementById('btn-whatsapp').style.display = 'block';
         });
     }
+
     function sendWhatsAppQuote() {
         const pickup = document.getElementById('pickup-input').value;
         const drop = document.getElementById('drop-input').value;
+        const date = document.getElementById('date-input').value;
+        const time = document.getElementById('time-input').value;
+        const rDate = document.getElementById('return-date-input').value;
+        const rTime = document.getElementById('return-time-input').value;
         const car = document.querySelector('.fleet-card.selected').querySelector('.fleet-title').innerText;
         const fare = document.getElementById('fare-amount').innerText;
-        const msg = `Hello! 🚖\nBooking ROUND TRIP:\n\n*Pickup:* ${pickup}\n*Destination:* ${drop}\n*Vehicle:* ${car}\n*Est Fare:* ${fare}`;
+        const details = document.getElementById('fare-details').innerText;
+
+        const msg = `Hello! 🚖\nBooking ROUND TRIP:\n\n*Pickup:* ${pickup}\n*Destination:* ${drop}\n*Date:* ${date} at ${time}\n*Return:* ${rDate} at ${rTime}\n*Vehicle:* ${car}\n\n*Est Fare:* ${fare}\n(${details})`;
         window.open(`https://wa.me/919043743777?text=${encodeURIComponent(msg)}`, '_blank');
     }
 </script>
