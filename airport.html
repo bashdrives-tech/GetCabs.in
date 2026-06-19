@@ -26,6 +26,8 @@
         .fixed-bottom { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: #ffffff; padding: 15px 20px; display: flex; gap: 15px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 90; }
         .btn-main-call { flex: 1; background: var(--primary-dark); color: #ffffff; border: none; border-radius: 16px; font-size: 1rem; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 10px; text-decoration: none; }
         .btn-whatsapp { width: 60px; height: 60px; background: var(--wa-green); color: white; border: none; border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; text-decoration: none; }
+        /* Add styling for Google Places dropdown */
+        .pac-container { z-index: 1050; border-radius: 12px; margin-top: 5px; border: none; box-shadow: 0 4px 20px rgba(0,0,0,0.1); font-family: 'Poppins', sans-serif; }
     </style>
 </head>
 <body>
@@ -53,7 +55,17 @@
         <a href="https://wa.me/919043743777" class="btn-whatsapp">💬</a>
     </div>
 </div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB7j5s8T369OKe4H69e3jhkGfM2sJhniCo&libraries=places&callback=initMap" async defer></script>
+
 <script>
+    // Initialize Google Places Autocomplete for the airport page
+    function initMap() {
+        const options = { componentRestrictions: { country: "in" } };
+        new google.maps.places.Autocomplete(document.getElementById('pickup-input'), options);
+        new google.maps.places.Autocomplete(document.getElementById('drop-input'), options);
+    }
+
     function sendAirportQuote() {
         const pickup = document.getElementById('pickup-input').value || "Not specified";
         const drop = document.getElementById('drop-input').value || "Not specified";
