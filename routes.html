@@ -4,47 +4,85 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Tamil Nadu Routes & Fares | Get Taxi Kovai</title>
+    <meta name="description" content="Explore drop taxi fares for all major routes across Tamil Nadu. Coimbatore to Chennai, Madurai, Salem, Ooty, and more.">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root { --primary-dark: #0a0b16; --primary-yellow: #ffcc00; --bg-light: #f5f6fa; --text-dark: #1e293b; --text-light: #ffffff; --text-muted: #94a3b8; --wa-green: #25d366; --border-radius-lg: 30px; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background-color: var(--primary-dark); color: var(--text-light); display: flex; justify-content: center; }
-        .app-container { width: 100%; max-width: 480px; background-color: var(--primary-dark); position: relative; min-height: 100vh; padding-bottom: 90px; }
-        header { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
-        .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.2rem; text-decoration: none; color: white;}
+        .app-container { width: 100%; max-width: 480px; background-color: var(--primary-dark); position: relative; min-height: 100vh; padding-bottom: 90px; overflow-x: hidden; }
+        
+        /* HEADER & MENU */
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px; position: sticky; top: 0; background: rgba(10, 11, 22, 0.95); backdrop-filter: blur(10px); z-index: 100; }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.2rem; text-decoration: none; color: white; letter-spacing: 0.5px;}
         .logo-icon { background: var(--primary-yellow); color: var(--primary-dark); padding: 8px 12px; border-radius: 8px; font-size: 1.2rem; }
-        .hero { padding: 20px 20px 30px; text-align: center; }
+        .header-actions { display: flex; gap: 10px; }
+        .icon-btn { width: 45px; height: 45px; border-radius: 12px; border: none; display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.2rem; background: #1e1f2f; color: white; transition: all 0.2s; }
+        
+        .hero { padding: 20px 20px 40px; text-align: center; }
         .hero h1 { font-size: 1.85rem; font-weight: 800; line-height: 1.25; margin-bottom: 15px; text-transform: uppercase; }
         .hero h1 span { color: var(--primary-yellow); }
-        .content-area { background: #ffffff; border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0; padding: 30px 20px 40px; color: var(--text-dark); min-height: 60vh; }
+        .hero p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.5; }
+
+        .content-area { background: #ffffff; border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0; padding: 40px 20px 50px; color: var(--text-dark); min-height: 60vh; }
         .section-header { font-size: 1.1rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 20px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; margin-top: 35px;}
         .section-header:first-child { margin-top: 0; }
         .section-header::before { content: ''; display: block; width: 4px; height: 18px; background: var(--primary-yellow); border-radius: 4px; }
-        .all-routes-container { display: flex; flex-direction: column; gap: 10px; }
-        .compact-route { display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 1px solid #e2e8f0; border-radius: 12px; background: #fafafa; }
-        .cr-info h4 { font-size: 0.85rem; font-weight: 700; color: var(--primary-dark); margin-bottom: 2px; }
-        .cr-info p { font-size: 0.65rem; color: var(--text-muted); font-weight: 600; }
+        
+        /* ROUTE CARDS */
+        .all-routes-container { display: flex; flex-direction: column; gap: 12px; }
+        .compact-route { display: flex; justify-content: space-between; align-items: center; padding: 15px 18px; border: 1px solid #e2e8f0; border-radius: 12px; background: #fafafa; transition: transform 0.2s; }
+        .compact-route:active { transform: scale(0.98); border-color: var(--primary-yellow); }
+        .cr-info h4 { font-size: 0.9rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 4px; }
+        .cr-info p { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
         .cr-action { display: flex; align-items: center; gap: 15px; }
-        .cr-price { font-size: 0.95rem; font-weight: 800; color: #d4a300; text-align: right; line-height: 1.1;}
-        .cr-price span { display: block; font-size: 0.55rem; color: var(--text-muted); font-weight: 600; text-transform: uppercase;}
-        .cr-btn { background: var(--primary-dark); color: var(--primary-yellow); width: 35px; height: 35px; border-radius: 8px; display: flex; justify-content: center; align-items: center; text-decoration: none; font-size: 1.1rem; }
+        .cr-price { font-size: 1.1rem; font-weight: 800; color: #d4a300; text-align: right; line-height: 1.1;}
+        .cr-price span { display: block; font-size: 0.55rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;}
+        .cr-btn { background: var(--primary-dark); color: var(--primary-yellow); width: 40px; height: 40px; border-radius: 10px; display: flex; justify-content: center; align-items: center; text-decoration: none; font-size: 1.2rem; }
+
+        /* ACCORDIONS */
         .hub-accordion { margin-bottom: 15px; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; }
         .hub-btn { width: 100%; background: #ffffff; padding: 20px; display: flex; justify-content: space-between; align-items: center; border: none; font-size: 1rem; font-weight: 800; color: var(--primary-dark); cursor: pointer; text-transform: uppercase; }
         .hub-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; background: #fafafa; }
         .hub-content-inner { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        .hub-accordion.active .hub-content { max-height: 2000px; }
+        .hub-accordion.active .hub-content { max-height: 2000px; border-top: 1px solid #e2e8f0; }
+
+        /* FOOTER & BOTTOM BAR */
+        .main-footer { background-color: var(--primary-dark); padding: 40px 20px 60px; text-align: center; border-top: 1px solid rgba(255, 204, 0, 0.1); }
+        .footer-copyright { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
         .fixed-bottom { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: #ffffff; padding: 15px 20px; display: flex; gap: 15px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 90; }
         .btn-main-call { flex: 1; background: var(--primary-dark); color: #ffffff; border: none; border-radius: 16px; font-size: 1rem; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 10px; text-decoration: none; }
         .btn-whatsapp { width: 60px; height: 60px; background: var(--wa-green); color: white; border: none; border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; text-decoration: none; }
+
+        /* SIDE MENU */
+        .menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(4px); z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
+        .menu-overlay.active { opacity: 1; pointer-events: auto; }
+        .side-menu { position: fixed; top: 0; right: -100%; width: 85%; max-width: 400px; height: 100vh; background-color: var(--primary-dark); z-index: 1001; transition: right 0.4s cubic-bezier(0.77, 0, 0.175, 1); display: flex; flex-direction: column; overflow-y: auto; }
+        .side-menu.active { right: 0; }
+        .side-menu-header { display: flex; justify-content: space-between; align-items: center; padding: 20px; background: #111324; }
+        .side-menu-content { padding: 30px 20px; flex: 1; }
+        .nav-section-title { font-size: 0.75rem; color: var(--text-muted); font-weight: 700; letter-spacing: 1.5px; margin-bottom: 20px; text-transform: uppercase; }
+        .nav-links { display: flex; flex-direction: column; gap: 20px; margin-bottom: 40px; }
+        .nav-links a { color: var(--text-light); text-decoration: none; font-size: 1.1rem; font-weight: 600; transition: color 0.2s; }
+        .contact-card { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; text-decoration: none; }
+        .contact-icon-small { width: 45px; height: 45px; border-radius: 12px; background: #1a1c2e; color: var(--primary-yellow); display: flex; justify-content: center; align-items: center; font-size: 1.2rem; }
+        .contact-text { color: var(--text-muted); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px; line-height: 1.4; }
     </style>
 </head>
 <body>
 <div class="app-container">
-    <header><a href="index.html" class="logo"><div class="logo-icon">←</div>BACK</a></header>
+    <header>
+        <a href="index.html" class="logo"><div class="logo-icon">🚗</div>GET TAXI KOVAI</a>
+        <div class="header-actions">
+            <button class="icon-btn btn-menu" onclick="toggleMenu()">☰</button>
+        </div>
+    </header>
+
     <section class="hero">
         <h1>INTERCITY <br><span>ROUTES & FARES</span></h1>
-        <p>Booking drop taxis across major hubs in Tamil Nadu.</p>
+        <p>Premium drop taxi services across all major hubs in Tamil Nadu.</p>
     </section>
+
     <section class="content-area">
         <h2 class="section-header">Departing Coimbatore</h2>
         <div class="all-routes-container">
@@ -69,6 +107,20 @@
                     <a href="https://wa.me/919043743777?text=Booking:%20Coimbatore%20to%20Madurai" class="cr-btn">➔</a>
                 </div>
             </div>
+            <div class="compact-route">
+                <div class="cr-info"><h4>Coimbatore to Salem</h4><p>🛣️ ~170 km Drop Taxi</p></div>
+                <div class="cr-action">
+                    <div class="cr-price">₹2380<span>+ Bata</span></div>
+                    <a href="https://wa.me/919043743777?text=Booking:%20Coimbatore%20to%20Salem" class="cr-btn">➔</a>
+                </div>
+            </div>
+            <div class="compact-route">
+                <div class="cr-info"><h4>Coimbatore to Trichy</h4><p>🛣️ ~215 km Drop Taxi</p></div>
+                <div class="cr-action">
+                    <div class="cr-price">₹3010<span>+ Bata</span></div>
+                    <a href="https://wa.me/919043743777?text=Booking:%20Coimbatore%20to%20Trichy" class="cr-btn">➔</a>
+                </div>
+            </div>
         </div>
 
         <h2 class="section-header">More Tamil Nadu Hubs</h2>
@@ -78,10 +130,24 @@
             <div class="hub-content">
                 <div class="hub-content-inner">
                     <div class="compact-route">
-                        <div class="cr-info"><h4>Chennai to Bangalore</h4><p>🛣️ ~350 km Drop Taxi</p></div>
+                        <div class="cr-info"><h4>Chennai to Coimbatore</h4><p>🛣️ ~500 km Drop Taxi</p></div>
                         <div class="cr-action">
-                            <div class="cr-price">₹4900<span>+ Bata</span></div>
-                            <a href="https://wa.me/919043743777?text=Booking:%20Chennai%20to%20Bangalore" class="cr-btn">➔</a>
+                            <div class="cr-price">₹7000<span>+ Bata</span></div>
+                            <a href="https://wa.me/919043743777?text=Booking:%20Chennai%20to%20Coimbatore" class="cr-btn">➔</a>
+                        </div>
+                    </div>
+                    <div class="compact-route">
+                        <div class="cr-info"><h4>Chennai to Madurai</h4><p>🛣️ ~460 km Drop Taxi</p></div>
+                        <div class="cr-action">
+                            <div class="cr-price">₹6440<span>+ Bata</span></div>
+                            <a href="https://wa.me/919043743777?text=Booking:%20Chennai%20to%20Madurai" class="cr-btn">➔</a>
+                        </div>
+                    </div>
+                    <div class="compact-route">
+                        <div class="cr-info"><h4>Chennai to Trichy</h4><p>🛣️ ~330 km Drop Taxi</p></div>
+                        <div class="cr-action">
+                            <div class="cr-price">₹4620<span>+ Bata</span></div>
+                            <a href="https://wa.me/919043743777?text=Booking:%20Chennai%20to%20Trichy" class="cr-btn">➔</a>
                         </div>
                     </div>
                 </div>
@@ -93,6 +159,20 @@
             <div class="hub-content">
                 <div class="hub-content-inner">
                     <div class="compact-route">
+                        <div class="cr-info"><h4>Madurai to Coimbatore</h4><p>🛣️ ~210 km Drop Taxi</p></div>
+                        <div class="cr-action">
+                            <div class="cr-price">₹2940<span>+ Bata</span></div>
+                            <a href="https://wa.me/919043743777?text=Booking:%20Madurai%20to%20Coimbatore" class="cr-btn">➔</a>
+                        </div>
+                    </div>
+                    <div class="compact-route">
+                        <div class="cr-info"><h4>Madurai to Chennai</h4><p>🛣️ ~460 km Drop Taxi</p></div>
+                        <div class="cr-action">
+                            <div class="cr-price">₹6440<span>+ Bata</span></div>
+                            <a href="https://wa.me/919043743777?text=Booking:%20Madurai%20to%20Chennai" class="cr-btn">➔</a>
+                        </div>
+                    </div>
+                    <div class="compact-route">
                         <div class="cr-info"><h4>Madurai to Kanyakumari</h4><p>🛣️ ~240 km Drop Taxi</p></div>
                         <div class="cr-action">
                             <div class="cr-price">₹3360<span>+ Bata</span></div>
@@ -102,14 +182,109 @@
                 </div>
             </div>
         </div>
+
+        <div class="hub-accordion">
+            <button class="hub-btn" onclick="toggleHub(this)">📍 Routes from Salem ▼</button>
+            <div class="hub-content">
+                <div class="hub-content-inner">
+                    <div class="compact-route">
+                        <div class="cr-info"><h4>Salem to Coimbatore</h4><p>🛣️ ~170 km Drop Taxi</p></div>
+                        <div class="cr-action">
+                            <div class="cr-price">₹2380<span>+ Bata</span></div>
+                            <a href="https://wa.me/919043743777?text=Booking:%20Salem%20to%20Coimbatore" class="cr-btn">➔</a>
+                        </div>
+                    </div>
+                    <div class="compact-route">
+                        <div class="cr-info"><h4>Salem to Chennai</h4><p>🛣️ ~340 km Drop Taxi</p></div>
+                        <div class="cr-action">
+                            <div class="cr-price">₹4760<span>+ Bata</span></div>
+                            <a href="https://wa.me/919043743777?text=Booking:%20Salem%20to%20Chennai" class="cr-btn">➔</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="hub-accordion">
+            <button class="hub-btn" onclick="toggleHub(this)">📍 Routes from Trichy ▼</button>
+            <div class="hub-content">
+                <div class="hub-content-inner">
+                    <div class="compact-route">
+                        <div class="cr-info"><h4>Trichy to Coimbatore</h4><p>🛣️ ~215 km Drop Taxi</p></div>
+                        <div class="cr-action">
+                            <div class="cr-price">₹3010<span>+ Bata</span></div>
+                            <a href="https://wa.me/919043743777?text=Booking:%20Trichy%20to%20Coimbatore" class="cr-btn">➔</a>
+                        </div>
+                    </div>
+                    <div class="compact-route">
+                        <div class="cr-info"><h4>Trichy to Chennai</h4><p>🛣️ ~330 km Drop Taxi</p></div>
+                        <div class="cr-action">
+                            <div class="cr-price">₹4620<span>+ Bata</span></div>
+                            <a href="https://wa.me/919043743777?text=Booking:%20Trichy%20to%20Chennai" class="cr-btn">➔</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
+
+    <footer class="main-footer">
+        <div class="footer-copyright">© 2026 GET TAXI KOVAI.</div>
+    </footer>
+
     <div class="fixed-bottom">
         <a href="tel:+919043743777" class="btn-main-call">📞 CALL NOW</a>
         <a href="https://wa.me/919043743777" class="btn-whatsapp">💬</a>
     </div>
 </div>
+
+<div class="menu-overlay" id="navOverlay" onclick="toggleMenu()"></div>
+<div class="side-menu" id="sideNav">
+    <div class="side-menu-header">
+        <div class="logo">
+            <div class="logo-icon">🚗</div>
+            GET TAXI
+        </div>
+        <button class="icon-btn" style="background: #1e1f2f; color: white;" onclick="toggleMenu()">✕</button>
+    </div>
+    <div class="side-menu-content">
+        <div class="nav-section-title">QUICK NAVIGATION</div>
+        <div class="nav-links">
+            <a href="index.html">Homepage</a>
+            <a href="routes.html">Route Map</a>
+            <a href="tariff.html">Tariff Card</a>
+            <a href="faq.html">FAQs</a>
+            <a href="privacy.html">Privacy & Terms</a>
+        </div>
+        <div class="nav-section-title">GET IN TOUCH</div>
+        
+        <a href="https://maps.google.com/?q=Get+Taxi+Kovai,+Coimbatore,+Tamil+Nadu" target="_blank" class="contact-card">
+            <div class="contact-icon-small">📍</div>
+            <div class="contact-text">Get Taxi Kovai<br>Coimbatore, Tamil Nadu</div>
+        </a>
+        <a href="tel:+919043743777" class="contact-card">
+            <div class="contact-icon-small">📞</div>
+            <div class="contact-text">+91 9043743777</div>
+        </a>
+        <a href="mailto:booking@gettaxikovai.in" class="contact-card">
+            <div class="contact-icon-small">✉️</div>
+            <div class="contact-text">BOOKING@GETTAXIKOVAI.IN</div>
+        </a>
+    </div>
+</div>
+
 <script>
-    function toggleHub(button) { button.parentElement.classList.toggle('active'); }
+    // Accordion Logic
+    function toggleHub(button) { 
+        button.parentElement.classList.toggle('active'); 
+    }
+    
+    // Menu Logic
+    function toggleMenu() {
+        document.getElementById('navOverlay').classList.toggle('active');
+        document.getElementById('sideNav').classList.toggle('active');
+        document.body.style.overflow = document.getElementById('sideNav').classList.contains('active') ? 'hidden' : '';
+    }
 </script>
 </body>
 </html>
