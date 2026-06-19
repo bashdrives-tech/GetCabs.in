@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frequently Asked Questions | Get Taxi Kovai</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary-dark: #0a0b16; --primary-yellow: #ffcc00; --bg-light: #f5f6fa; --text-dark: #1e293b; --text-light: #ffffff; --text-muted: #94a3b8; --wa-green: #25d366; --border-radius-lg: 30px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: var(--primary-dark); color: var(--text-light); display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 480px; background-color: var(--primary-dark); position: relative; min-height: 100vh; padding-bottom: 90px; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 20px; }
+        .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.2rem; text-decoration: none; color: white;}
+        .logo-icon { background: var(--primary-yellow); color: var(--primary-dark); padding: 8px 12px; border-radius: 8px; font-size: 1.2rem; }
+        .hero { padding: 20px 20px 30px; text-align: center; }
+        .hero h1 { font-size: 1.85rem; font-weight: 800; line-height: 1.25; margin-bottom: 15px; text-transform: uppercase; }
+        .hero h1 span { color: var(--primary-yellow); }
+        .faq-section { background-color: var(--bg-light); border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0; padding: 40px 20px; color: var(--primary-dark); min-height: 60vh; }
+        .faq-item { background: #ffffff; border-radius: 12px; margin-bottom: 15px; overflow: hidden; border: 1px solid #e2e8f0; }
+        .faq-question { width: 100%; text-align: left; padding: 20px; background: none; border: none; font-size: 0.95rem; font-weight: 700; color: var(--primary-dark); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .faq-question span { font-size: 1.2rem; color: var(--primary-yellow); transition: transform 0.3s; }
+        .faq-answer { padding: 0 20px; max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; font-size: 0.85rem; color: var(--text-muted); line-height: 1.6; }
+        .faq-item.active .faq-answer { padding-bottom: 20px; max-height: 300px; }
+        .faq-item.active .faq-question span { transform: rotate(45deg); }
+        .fixed-bottom { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: #ffffff; padding: 15px 20px; display: flex; gap: 15px; box-shadow: 0 -5px 20px rgba(0,0,0,0.05); z-index: 90; }
+        .btn-main-call { flex: 1; background: var(--primary-dark); color: #ffffff; border: none; border-radius: 16px; font-size: 1rem; font-weight: 600; display: flex; justify-content: center; align-items: center; gap: 10px; text-decoration: none; }
+        .btn-whatsapp { width: 60px; height: 60px; background: var(--wa-green); color: white; border: none; border-radius: 16px; display: flex; justify-content: center; align-items: center; font-size: 1.5rem; text-decoration: none; }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <header><a href="index.html" class="logo"><div class="logo-icon">←</div>BACK</a></header>
+    <section class="hero">
+        <h1>FREQUENTLY ASKED <br><span>QUESTIONS</span></h1>
+        <p>Everything you need to know about booking with Get Taxi Kovai.</p>
+    </section>
+    <section class="faq-section">
+        <div class="faq-item">
+            <button class="faq-question">Are there any hidden charges? <span>+</span></button>
+            <div class="faq-answer">No! We believe in 100% transparent billing. The quote you receive is what you pay. Tolls, state permits, and parking are extra and settled directly by you.</div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">How does One-Way pricing work? <span>+</span></button>
+            <div class="faq-answer">For one-way drops, you only pay for the distance traveled. There is a minimum chargeable distance of 130 KMs, plus a standard driver bata of ₹400.</div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Are there extra charges for Hill Stations? <span>+</span></button>
+            <div class="faq-answer">Yes, driving in hilly terrains like Ooty, Kodaikanal, and Munnar requires additional fuel and driver expertise. A flat ₹400 Hill Charge is added to these routes.</div>
+        </div>
+        <div class="faq-item">
+            <button class="faq-question">Do you travel at night? <span>+</span></button>
+            <div class="faq-answer">Yes, we operate 24/7. Please note that if your journey requires driving between 10:00 PM and 6:00 AM, an additional night driver bata is applicable.</div>
+        </div>
+    </section>
+    <div class="fixed-bottom">
+        <a href="tel:+919043743777" class="btn-main-call">📞 CALL NOW</a>
+        <a href="https://wa.me/919043743777" class="btn-whatsapp">💬</a>
+    </div>
+</div>
+<script>
+    document.querySelectorAll('.faq-question').forEach(btn => {
+        btn.addEventListener('click', () => btn.parentElement.classList.toggle('active'));
+    });
+</script>
+</body>
+</html>
